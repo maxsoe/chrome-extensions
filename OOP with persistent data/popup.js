@@ -18,11 +18,11 @@ var app = {
 
     // add a click event on the button
     $skuInput.addEventListener("click", function() {
-      console.log("button click", $sku.value);
+      // console.log("button click", $sku.value);
 
       // Send a message to the background page using a key-value pairs
       chrome.runtime.sendMessage({fn: "setSku", sku: $sku.value});
-    })
+    });
   }
 };
 
