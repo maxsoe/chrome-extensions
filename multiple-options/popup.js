@@ -2,7 +2,7 @@
 
 var console = chrome.extension.getBackgroundPage().console;
 
-console.log("hello from popup.js");
+console.log("Popup activated");
 
 var app = {
   init: function() {
@@ -10,19 +10,30 @@ var app = {
     var $sku = document.getElementById("sku");
     var $skuInput = document.getElementById("useSku");
 
-    // go get the sku if it's there
-    chrome.runtime.sendMessage({fn: "getSku"}, function(response) {
+    var $variants = document.getElementsByClassName("variant");
+
+    // go get a variant if it's in the background page
+    chrome.runtime.sendMessage({fn: "getVariant"}, function(response) {
       console.log("popup got response", response);
-      $sku.value = response;
+      // TODO set value to checked for current variant
+      // $sku.value = response;
     });
 
-    // add a click event on the button
-    $skuInput.addEventListener("click", function() {
-      // console.log("button click", $sku.value);
+    // loop through variants
+    for (i = 0; i < $variants.length; i++) {
+      // look at the current variant defined by the index
+      var $currentVariant = $variants[i];
+      $currentVariant.addEventListener('click', (function(valueCopy) {
+          return function() {
+            // do something to this variant
+            console.log("Popup.js: clicked on "+valueCopy);
 
-      // Send a message to the background page using a key-value pairs
-      chrome.runtime.sendMessage({fn: "setSku", sku: $sku.value});
-    });
+            // Send a message to the background page as an object
+            chrome.runtime.sendMessage({fn: "setVariant", value: valueCopy});
+          };
+      })($currentVariant.value));
+    };
+
   }
 };
 

@@ -4,7 +4,7 @@ console.log("Hello for OOP with persistent data. This is background.js");
 
 var background = {
   // set sku to an empty string
-  sku: "",
+  variant: "",
 
   init: function() {
 
@@ -18,14 +18,17 @@ var background = {
     });
   },
 
-  setSku: function(request, sender, sendResponse) {
-    console.log("setting sku", request.sku);
-    // set the current object(background)'s sku to be the same as request's
-    this.sku = request.sku;
+  setVariant: function(request, sender, sendResponse) {
+    console.log("Background script: setting variant", request.value);
+    // set the current object(background)'s variant to be the same as popup's
+    this.variant = request.value;
+
+    // Needs to send a message to the content script to change the page's DOM
+    // chrome.runtime.sendMessage({fn: "setVariant", value: request.value});
   },
 
-  getSku: function(request, sender, sendResponse) {
-    sendResponse(this.sku);
+  getVariant: function(request, sender, sendResponse) {
+    sendResponse(this.variant);
   }
 };
 
